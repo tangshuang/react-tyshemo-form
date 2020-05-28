@@ -1,0 +1,42 @@
+{
+  "name": "react-tyshemo-form",
+  "version": "1.0.0",
+  "description": "react form driver based on tyshemo model",
+  "main": "index.js",
+  "scripts": {
+    "demo": "parcel _demo/index.html --out-dir=.cache/.dist",
+    "build": "babel src/index.js -o index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tangshuang/react-tyshemo-form.git"
+  },
+  "keywords": [
+    "react",
+    "form",
+    "tyshemo"
+  ],
+  "author": "tangshuang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tangshuang/react-tyshemo-form/issues"
+  },
+  "homepage": "https://github.com/tangshuang/react-tyshemo-form#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-react": "^7.9.4",
+    "parcel-bundler": "^1.12.4",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "dependencies": {
+    "react-tyshemo": "^2.1.4",
+    "ts-fns": "^6.4.4"
+  },
+  "peerDependencies": {
+    "react": "^16.13.1"
+  }
+}
