@@ -60,6 +60,7 @@ Props:
 - component: which component to be used to render
 - render: function to render
 - extend?: function, append more props to render or component
+- deps?: array, other field names which is depended by current field
 
 **component**
 
@@ -100,11 +101,23 @@ If these props are not enough for your requirement, you can use `extend` to appe
 ```js
 <Field name="age" extend={(view) => {
   return {
-    // append props
-    name: model.name, // i.e. I want to use another field of model for this field UI, I have to append it here
+    // override prop
+    value: +view.value, // I want to make sure `value` is a number
   }
 }} />
 ```
 
 The appended props will be mreged into previous props, if some prop has been existing, it will be override.
 When to use `extend`? When the component's needing props names are not the same as given, or need more props.
+
+`Field` will only rerender when the `name` field's value change, this make it more performanceful. However, if current field depends on other fields, you should pass `deps` prop to let `Field` know which fields' change will trigger rerendering.
+
+```js
+<Field name="age" deps={['name']} extend={(view) => {
+  return {
+    // append props
+    // I pass deps={['name']} to make it rerender when name field change
+    name: model.name, // I want to use another field of model for this field UI, I have to append it here
+  }
+}} />
+```
