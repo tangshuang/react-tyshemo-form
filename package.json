@@ -32,7 +32,7 @@
     "react-dom": "^16.13.1"
   },
   "dependencies": {
-    "react-tyshemo": "^2.1.5",
+    "react-tyshemo": "^2.1.7",
     "ts-fns": "^6.4.4"
   },
   "peerDependencies": {
