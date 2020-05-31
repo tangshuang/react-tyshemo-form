@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useObserver } from 'react-tyshemo'
 
 export * from 'react-tyshemo'

@@ -29,13 +29,11 @@
     "@babel/preset-react": "^7.9.4",
     "parcel-bundler": "^1.12.4",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "tyshemo": "^7.2.0"
   },
   "dependencies": {
-    "react-tyshemo": "^2.1.7",
+    "react-tyshemo": "^3.0.0",
     "ts-fns": "^6.4.4"
-  },
-  "peerDependencies": {
-    "react": "^16.13.1"
   }
 }
