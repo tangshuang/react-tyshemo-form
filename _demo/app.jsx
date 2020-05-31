@@ -58,7 +58,7 @@ export default function App() {
         return (
           <div key={key}>
             <label>{label}:</label>
-            <Field model={model} name={key} extend={() => ({ type })} render={({ value, onChange, type }) => {
+            <Field model={model} name={key} map={view => ({ ...view, type })} render={({ value, onChange, type }) => {
               return <input type={type} value={value} onChange={e => onChange(e.target.value)} />
             }} />
           </div>
