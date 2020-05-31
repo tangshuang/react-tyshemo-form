@@ -1,8 +1,6 @@
 import React from 'react'
 import { useObserver } from 'react-tyshemo'
 
-export * from 'react-tyshemo'
-
 export function Field(props) {
   const { model, name, render, component: Component, extend, children, deps = [] } = props
   const keys = [name, ...deps]

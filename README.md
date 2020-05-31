@@ -5,13 +5,17 @@ Easy react form driver based on tyshemo model.
 ## Install
 
 ```
-npm i react-tyshemo-form
+npm i react-tyshemo-form react-tyshemo tyshemo
 ```
+
+Notice, you should must install `react-tyshemo` and `tyshemo` together.
 
 ## Usage
 
 ```js
-import { Field, Model, useLocal } from 'react-tyshemo-form'
+import { Model } from 'tyshemo'
+import { useLocal } from 'react-tyshemo'
+import { Field } from 'react-tyshemo-form'
 
 class SomeModel extends Model {
 
@@ -28,8 +32,15 @@ class SomeModel extends Model {
 
 }
 
+function useModel() {
+  const model = useLocal(function() {
+    return SomeModel
+  })
+  return model
+}
+
 function MyComponent() {
-  const model = useLocal(() => SomeModel)
+  const model = useModel()
 
   return (
     <form>
