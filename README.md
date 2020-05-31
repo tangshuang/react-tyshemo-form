@@ -70,8 +70,7 @@ Props:
 - name: field name of the model
 - component: which component to be used to render
 - render: function to render
-- extend?: function, append more props to render or component
-- deps?: array, other field names which is depended by current field
+- map?: function, append more props to render or component
 
 **component**
 
@@ -107,28 +106,40 @@ And the component or function will receive a `view` object:
 - errors: array, current validation results (not including type checking and required checking result, only result by validators)
 - onChange(next): function, when you invoke `onChange` in the render function, the `Field` component will rerender
 
-If these props are not enough for your requirement, you can use `extend` to append more props:
+If these props are not enough for your requirement, you can use `map` to load more props:
 
 ```js
-<Field name="age" extend={(view) => {
+<Field name="age" map={(view) => {
   return {
+    ...view,
     // override prop
     value: +view.value, // I want to make sure `value` is a number
   }
 }} />
 ```
 
-The appended props will be mreged into previous props, if some prop has been existing, it will be override.
-When to use `extend`? When the component's needing props names are not the same as given, or need more props.
+The appended props should be mreged into previous props. The return value of `map` will be passed into render function.
 
-`Field` will only rerender when the `name` field's value change, this make it more performanceful. However, if current field depends on other fields, you should pass `deps` prop to let `Field` know which fields' change will trigger rerendering.
+`Field` will only rerender when the `name` field's value change, this make it more performanceful.
+
+## Fields
+
+In some cases, you need to use multiple fields in one section, then you should use `Fields` component.
 
 ```js
-<Field name="age" deps={['name']} extend={(view) => {
-  return {
-    // append props
-    // I pass deps={['name']} to make it rerender when name field change
-    name: model.name, // I want to use another field of model for this field UI, I have to append it here
-  }
-}} />
+<Fields
+  model={model}
+  names={['key1', 'key2']}
+  map={([view1, view2]) => {
+    // ...
+    // should return an array
+  }}
+  render={([view1, view2]) => {
+    // ...
+  }}
+/>
 ```
+
+Notice here, `names` changes to be an array, and the paramter of `map` and `render` change to an array too.
+
+`Fields` only rerenders when the passed names' value of model change, the same as `Field` does.
