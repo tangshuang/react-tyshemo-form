@@ -2,13 +2,15 @@
 
 Easy react form driver based on tyshemo model.
 
+> react-tyshemo-form is moved into react-tyshemo, you can import Filed component from [react-tyshemo/form](https://github.com/tangshuang/react-tyshemo).
+
 ## Install
 
 ```
-npm i react-tyshemo-form react-tyshemo tyshemo
+npm i react-tyshemo-form tyshemo
 ```
 
-Notice, you should must install `react-tyshemo` and `tyshemo` together.
+Notice, you should must install `tyshemo` together.
 
 ## Usage
 
@@ -16,6 +18,7 @@ Notice, you should must install `react-tyshemo` and `tyshemo` together.
 import { Model } from 'tyshemo'
 import { useLocal } from 'react-tyshemo'
 import { Field } from 'react-tyshemo-form'
+// import { Field } from 'react-tyshemo/form'
 
 class SomeModel extends Model {
 
@@ -127,6 +130,8 @@ The appended props should be mreged into previous props. The return value of `ma
 In some cases, you need to use multiple fields in one section, then you should use `Fields` component.
 
 ```js
+import { Fields } from 'react-tyshemo-form'
+
 <Fields
   model={model}
   names={['key1', 'key2']}
