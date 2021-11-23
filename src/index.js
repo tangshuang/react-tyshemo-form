@@ -3,24 +3,24 @@ import React, { useState, useEffect, useMemo, createContext, useCallback, memo }
 const formContext = createContext()
 const { Provider, Consumer } = formContext
 
-export function Form(props) {
-  const { model, children, component, ...others } = props
+export const Form = memo((props) => {
+  const { model, children, component = 'form', ...others } = props
 
   if (!model) {
     return null
   }
 
   const C = component
-  const content = C ? <C {...others}>{children}</C> : children
+  const content = !C ? children : <C {...others}>{children}</C>
 
   return (
     <Provider value={model}>
       {content}
     </Provider>
   )
-}
+})
 
-function FieldView(props) {
+const FieldController = memo((props) => {
   const {
     model,
     name,
@@ -59,7 +59,7 @@ function FieldView(props) {
   }, [model, nameList.join(',')])
 
   const onChange = useCallback((e) => {
-    if (e && e.target && e.target.value) {
+    if (e && e.target && e.type) {
       views[name].value = e.target.value
     }
     else {
@@ -68,28 +68,23 @@ function FieldView(props) {
   }, [model, name, views])
 
   const view = views[name]
-  const { readonly: readOnly, ...others } = view
 
   const info = {
     ...views,
-    ...others,
+    ...view,
     model,
-    view,
-    readOnly,
     onChange,
   }
 
   const attrs = typeof map === 'function' ? map(info) : info
 
   const Component = component
-  return component ? <Component {...attrs} {...params}>{children}</Component>
-    : render ? render({ ...attrs, ...params, children })
+  return render ? render({ ...attrs, ...params, children })
+    : component ? <Component {...attrs} {...params}>{children}</Component>
     : children
-}
+})
 
-const StaticFieldView = memo(FieldView)
-
-export function Field(props) {
+export const Field = memo((props) => {
   return (
     <Consumer>
       {(contextModel) => {
@@ -108,9 +103,8 @@ export function Field(props) {
           return null
         }
 
-
         return (
-          <StaticFieldView
+          <FieldController
             {...others}
             model={model}
             name={name}
@@ -119,30 +113,93 @@ export function Field(props) {
       }}
     </Consumer>
   )
+})
+
+// ------------------------------>>>>
+
+function createFieldView(info, component = info.component) {
+  if (!component) {
+    return
+  }
+
+  const [C, base = {}] = [].concat(component)
+
+  if (C === 'input') {
+    const attrs = {
+      value: info.value,
+      onChange: info.onChange,
+      placeholder: info.placeholder,
+      readOnly: info.readonly,
+      disabled: info.disabled,
+      hidden: info.hidden,
+      required: info.required,
+      type: info.type,
+      min: info.min,
+      max: info.max,
+      maxLength: info.maxLength,
+      minLength: info.minLength,
+      size: info.size,
+      name: info.name,
+      id: info.id,
+      multiple: info.multiple,
+      title: info.title,
+      pattern: info.pattern,
+      step: info.step,
+      ...base,
+    }
+    return <C {...attrs} />
+  }
+  else if (C === 'textarea') {
+    const attrs = {
+      value: info.value,
+      onChange: info.onChange,
+      placeholder: info.placeholder,
+      readOnly: info.readonly,
+      disabled: info.disabled,
+      hidden: info.hidden,
+      required: info.required,
+      cols: info.cols,
+      maxLength: info.maxLength,
+      rows: info.rows,
+      wrap: info.wrap,
+      ...base,
+    }
+    return <C {...attrs} />
+  }
+  else {
+    return <C {...info} {...base} />
+  }
 }
 
-
-export function FieldItem(props) {
-  const {
-    model,
-    name,
-    names = [],
-    map,
-    render,
-    component,
-    children,
-    label,
-    ...attrs
-  } = props
+export const FormField = memo((props) => {
+  const { component, render, children, ...others } = props
 
   return (
-    <Field model={model} name={name} names={names} map={map} render={(ctx) => {
-      return (
-        <div>
-          <label>{label}</label>
-          {content}
-        </div>
-      )
+    <Field {...others} render={(info) => {
+      if (render) {
+        return render(info)
+      }
+
+      const jsx = createFieldView(info, component)
+      if (typeof jsx !== 'undefined') {
+        return jsx
+      }
+
+      return children
     }} />
   )
-}
+})
+
+export const FormItem = memo((props) => {
+  const { model, name, label, className, ...attrs } = props
+
+  return (
+    <div className={className}>
+      <label>
+        <Field model={model} name={name} render={info => <span>{label ? label : info.label}{info.required ? <sup>*</sup> : null}</span>} />
+        <FormField model={model} name={name} {...attrs} />
+        <Field model={model} name={name} render={info => info.errors.length && info.changed ? <span><i>{info.errors.message}</i></span> : null} />
+      </label>
+    </div>
+  )
+})
