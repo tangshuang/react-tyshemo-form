@@ -58,7 +58,7 @@ Read more from [demo](./demo/index.js).
 The top provider of form.
 
 - model: instance of Model, required
-- component: ReactComponent or false, default is `form`, when false it will not wrap with any component
+- component: ReactComponent or `false`, default is `form`, when `false` it will not wrap with any component
 - other props will be passed into the given component
 
 ```js

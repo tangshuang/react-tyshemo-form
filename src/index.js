@@ -5,7 +5,6 @@ import React, {
   createContext,
   useCallback,
   memo,
-  useRef,
 } from 'react'
 
 const formContext = createContext()
@@ -143,42 +142,16 @@ function createFieldView(info, component = info.component) {
 
   if (C === 'input') {
     const attrs = {
-      value: info.value,
-      onChange: info.onChange,
-      placeholder: info.placeholder,
+      ...pick(['value', 'onChange', 'placeholder', 'disabled', 'hidden', 'required', 'type', 'min', 'max', 'maxLength', 'size', 'multiple', 'pattern', 'step']),
       readOnly: info.readonly,
-      disabled: info.disabled,
-      hidden: info.hidden,
-      required: info.required,
-      type: info.type,
-      min: info.min,
-      max: info.max,
-      maxLength: info.maxLength,
-      minLength: info.minLength,
-      size: info.size,
-      name: info.name,
-      id: info.id,
-      multiple: info.multiple,
-      title: info.title,
-      pattern: info.pattern,
-      step: info.step,
       ...base,
     }
     return <C {...attrs} />
   }
   else if (C === 'textarea') {
     const attrs = {
-      value: info.value,
-      onChange: info.onChange,
-      placeholder: info.placeholder,
+      ...pick(['value', 'onChange', 'placeholder', 'disabled', 'hidden', 'required', 'cols', 'rows', 'maxLength', 'wrap']),
       readOnly: info.readonly,
-      disabled: info.disabled,
-      hidden: info.hidden,
-      required: info.required,
-      cols: info.cols,
-      maxLength: info.maxLength,
-      rows: info.rows,
-      wrap: info.wrap,
       ...base,
     }
     return <C {...attrs} />
