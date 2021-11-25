@@ -18,11 +18,17 @@
     "url": "https://github.com/tangshuang/react-tyshemo-form/issues"
   },
   "homepage": "https://github.com/tangshuang/react-tyshemo-form#readme",
-  "dependencies": {
-    "react-tyshemo": "^4.0.0"
+  "scripts": {
+    "dev": "parcel demo/index.html"
   },
   "peerDependencies": {
-    "react": "^16.13.1",
-    "tyshemo": "^7.2.0"
+    "react": "^17.0.2",
+    "tyshemo": "^11.20.3"
+  },
+  "devDependencies": {
+    "parcel": "^2.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "tyshemo": "^11.20.3"
   }
 }
