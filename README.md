@@ -109,9 +109,11 @@ A component to render a field. In some cases, you do want to render the field in
 A react component which drive the UI by model.
 
 ```js
-<Field model={model} name="age" render={({ value, onChange }) => {
-  return <input type="number" value={value} onChange={e => onChange(e.target.value)} />
-}} />
+<Field model={model} name="age">
+  {({ value, onChange }) => {
+    return <input type="number" value={value} onChange={e => onChange(e.target.value)} />
+  }}
+</Field>
 ```
 
 Props:
@@ -119,16 +121,15 @@ Props:
 - model: a tyshemo model instance
 - name: field name of the model
 - names?: field names which will be used inside
-- component?: which component to be used to render
 - render?: function to render
 - map?: function, append more props to render or component
 
-**component**
-
-When you pass `render` prop, `component` will not work.
+If `children` is function, it will be used to render, if not, you can pass `render` to receive `children` to render.
 
 ```js
-<Field model={model} name="age" component={AgeComponent} />
+<Field name="age" render={({ children }) => {
+  ...
+}} />
 ```
 
 **render**
@@ -141,13 +142,9 @@ Use a `render` function to render.
 }} />
 ```
 
-The difference between `component` and `render` is that, render function will be run each time when component update.
-It is recommend to use `component` at all. Because `component` make it more performanceful.
-
 **meta**
 
-As you seen, in react, you can create functional components, which is the same structure with `render` function. So, use `component` will always work no matter you use functional components or class components.
-And the component or function will receive a `meta` object:
+And the render function will receive a `meta` object:
 
 - model: current used model
 - value: the current value of this field

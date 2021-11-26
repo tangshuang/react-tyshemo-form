@@ -1,4 +1,12 @@
-import React, { useState, useEffect, useMemo, createContext, useCallback, memo } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  createContext,
+  useCallback,
+  memo,
+  useRef,
+} from 'react'
 
 const formContext = createContext()
 const { Provider, Consumer } = formContext
@@ -27,7 +35,6 @@ const FieldController = memo((props) => {
     names = [],
     map,
     render,
-    component,
     children,
     ...params
   } = props
@@ -69,6 +76,10 @@ const FieldController = memo((props) => {
 
   const view = views[name]
 
+  if (view.hidden) {
+    return null
+  }
+
   const info = {
     ...views,
     ...view,
@@ -78,10 +89,9 @@ const FieldController = memo((props) => {
 
   const attrs = typeof map === 'function' ? map(info) : info
 
-  const Component = component
-  return render ? render({ ...attrs, ...params, children })
-    : component ? <Component {...attrs} {...params}>{children}</Component>
-    : children
+  return typeof children === 'function' ? children({ ...attrs, ...params })
+    : typeof render === 'function' ? render({ ...attrs, ...params, children })
+    : null
 })
 
 export const Field = memo((props) => {
@@ -123,6 +133,13 @@ function createFieldView(info, component = info.component) {
   }
 
   const [C, base = {}] = [].concat(component)
+  const pick = (keys) => {
+    const obj = {}
+    keys.forEach((key) => {
+      obj[key] = info[key]
+    })
+    return obj
+  }
 
   if (C === 'input') {
     const attrs = {
