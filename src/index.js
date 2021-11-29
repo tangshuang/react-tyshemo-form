@@ -179,7 +179,7 @@ export const FormField = memo((props) => {
         else if (render) {
           content = render(info)
         }
-        else if (component) {
+        else {
           const jsx = createFieldView(info, component)
           if (typeof jsx !== 'undefined') {
             content = jsx
