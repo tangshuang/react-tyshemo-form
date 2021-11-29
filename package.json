@@ -1,6 +1,6 @@
 {
   "name": "react-tyshemo-form",
-  "version": "5.0.6",
+  "version": "5.0.7",
   "description": "react form driver based on tyshemo model",
   "main": "index.js",
   "repository": {
