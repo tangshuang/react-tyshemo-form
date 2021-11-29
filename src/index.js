@@ -197,7 +197,7 @@ export const FormField = memo((props) => {
 })
 
 export const FormItem = memo((props) => {
-  const { className, ...attrs } = props
+  const { className, label, ...attrs } = props
 
   return (
     <FormField {...attrs} decorate={(info, content) => {
