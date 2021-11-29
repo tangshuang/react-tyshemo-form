@@ -35,6 +35,7 @@ const FieldController = memo((props) => {
     map,
     children,
     render,
+    keepAlive,
   } = props
 
   const nameList = [name, ...names].sort()
@@ -74,7 +75,7 @@ const FieldController = memo((props) => {
 
   const view = views[name]
 
-  if (view.hidden) {
+  if (view.hidden && !keepAlive) {
     return null
   }
 
@@ -96,7 +97,7 @@ export const Field = memo((props) => {
   return (
     <Consumer>
       {(contextModel) => {
-        const { model = contextModel, name, keepAlive, ...others } = props
+        const { model = contextModel, name, ...others } = props
 
         // dont show if no model
         if (!model || !model.$views) {
@@ -108,11 +109,6 @@ export const Field = memo((props) => {
 
         // dont show not existing field
         if (!view) {
-          return null
-        }
-
-        // hide the field
-        if (view.hidden && !keepAlive) {
           return null
         }
 
