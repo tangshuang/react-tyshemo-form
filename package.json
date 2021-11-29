@@ -3,7 +3,6 @@
   "version": "5.0.4",
   "description": "react form driver based on tyshemo model",
   "main": "index.js",
-  "module": "src/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tangshuang/react-tyshemo-form.git"
