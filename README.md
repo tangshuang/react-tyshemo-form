@@ -73,10 +73,10 @@ A component to render a row.
 
 - model?: can be inherited from `Form`
 - name: which field to use
-- names?: other fields which will be used
 - label?: label to display, will override label of meta
-- component?: which component used to render
 - render?: function, if passed it will be used to render the field area
+- component?: which component used to render
+- className
 
 ```js
 <Form model={model}>
@@ -86,15 +86,57 @@ A component to render a row.
 
 If the `name` meta has a property `component`, it can be used as component prop.
 
+**label**
+
+`FormItem` will use `label` of field meta as default, you can pass custom `label` to replace:
+
+```js
+class Some extends Meta {
+  static label = 'default label'
+}
+
+<FormItem name="some" label="custom label" />
+```
+
+**component**
+
+`FormItem` will use `component` of field meta as default, you can pass custom `component` to replace:
+
+```js
+class Some extends Meta {
+  static component = 'input'
+}
+
+<FormItem name="some" component={Input} />
+```
+
+It receive an array to define default props of the component:
+
+```js
+<FormItem name="some" component={[Input, { onChange }]} />
+```
+
+**render**
+
+Use a `render` function to generate custom layout:
+
+```js
+<FormItem name="some" render={(info) => {
+  return <input value={info.value} onChange={info.onChange} />
+}} />
+```
+
+Know more about `info` in `Field`.
+
 ### FormField
 
 A component to render a field. In some cases, you do want to render the field input alone, you can use this component.
 
 - model?
 - name
-- names?
 - component?
 - render?
+- decorate?: a function to generate output by default content
 
 ```js
 <Form model={model}>
@@ -103,6 +145,32 @@ A component to render a field. In some cases, you do want to render the field in
   </div>
 </Form>
 ```
+
+**decorate**
+
+`FormField` generate the field component only, if you want to wrap the result, you can use `decorate` to wrap:
+
+```js
+const FormItem = memo((props) => {
+  const { className, ...attrs } = props
+
+  return (
+    <FormField {...attrs} decorate={(info, content) => {
+      return (
+        <div className={className}>
+          <label>
+            <span>{label ? label : info.label}{info.required ? <sup>*</sup> : null}</span>
+            {content}
+            {info.errors.length && info.changed ? <i>{info.errors.message}</i> : null}
+          </label>
+        </div>
+      )
+    }} />
+  )
+})
+```
+
+Yes, this is the implement of `FormItem`.
 
 ### Field
 
@@ -142,9 +210,9 @@ Use a `render` function to render.
 }} />
 ```
 
-**meta**
+**info**
 
-And the render function will receive a `meta` object:
+And the render function will receive a `info` object:
 
 - model: current used model
 - value: the current value of this field
@@ -188,3 +256,9 @@ In some cases, you need to use multiple fields in one section, then you should u
   }}
 />
 ```
+
+## Implement
+
+The basic `Field` component is used by `FormField` and `FormItem`, you can use it to design your own components.
+
+`Field` (without any UI) -> `FormField` (supports field component) -> `FormItem` (with label)
