@@ -33,9 +33,8 @@ const FieldController = memo((props) => {
     name,
     names = [],
     map,
-    render,
     children,
-    ...params
+    render,
   } = props
 
   const nameList = [name, ...names].sort()
@@ -88,16 +87,16 @@ const FieldController = memo((props) => {
 
   const attrs = typeof map === 'function' ? map(info) : info
 
-  return typeof children === 'function' ? children({ ...attrs, ...params })
-    : typeof render === 'function' ? render({ ...attrs, ...params, children })
-    : null
+  return typeof children === 'function' ? children(attrs)
+    : typeof render === 'function' ? render(attrs) :
+    children
 })
 
 export const Field = memo((props) => {
   return (
     <Consumer>
       {(contextModel) => {
-        const { model = contextModel, name, ...others } = props
+        const { model = contextModel, name, keepAlive, ...others } = props
 
         // dont show if no model
         if (!model || !model.$views) {
@@ -109,6 +108,11 @@ export const Field = memo((props) => {
 
         // dont show not existing field
         if (!view) {
+          return null
+        }
+
+        // hide the field
+        if (view.hidden && !keepAlive) {
           return null
         }
 
@@ -162,34 +166,50 @@ function createFieldView(info, component = info.component) {
 }
 
 export const FormField = memo((props) => {
-  const { component, render, children, ...others } = props
+  const { component, render, children, decorate, ...attrs } = props
 
   return (
-    <Field {...others} render={(info) => {
-      if (render) {
-        return render(info)
-      }
+    <Field {...attrs}>
+      {(info) => {
+        let content = children
 
-      const jsx = createFieldView(info, component)
-      if (typeof jsx !== 'undefined') {
-        return jsx
-      }
+        if (typeof children === 'function') {
+          content = children(info)
+        }
+        else if (render) {
+          content = render(info)
+        }
+        else if (component) {
+          const jsx = createFieldView(info, component)
+          if (typeof jsx !== 'undefined') {
+            content = jsx
+          }
+        }
 
-      return children
-    }} />
+        if (decorate) {
+          content = decorate(info, content)
+        }
+
+        return content
+      }}
+    </Field>
   )
 })
 
 export const FormItem = memo((props) => {
-  const { model, name, label, className, ...attrs } = props
+  const { className, ...attrs } = props
 
   return (
-    <div className={className}>
-      <label>
-        <Field model={model} name={name} render={info => <span>{label ? label : info.label}{info.required ? <sup>*</sup> : null}</span>} />
-        <FormField model={model} name={name} {...attrs} />
-        <Field model={model} name={name} render={info => info.errors.length && info.changed ? <span><i>{info.errors.message}</i></span> : null} />
-      </label>
-    </div>
+    <FormField {...attrs} decorate={(info, content) => {
+      return (
+        <div className={className}>
+          <label>
+            <span>{label ? label : info.label}{info.required ? <sup>*</sup> : null}</span>
+            {content}
+            {info.errors.length && info.changed ? <i>{info.errors.message}</i> : null}
+          </label>
+        </div>
+      )
+    }} />
   )
 })
