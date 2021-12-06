@@ -46,9 +46,11 @@ const FieldController = memo((props) => {
     const forceUpdate = () => update({})
     nameList.forEach((name) => {
       model.watch(name, forceUpdate, true)
+      model.watch(`!${name}`, forceUpdate)
     })
     return () => nameList.forEach((name) => {
       model.unwatch(name, forceUpdate)
+      model.unwatch(`!${name}`, forceUpdate)
     })
   }, [model, nameList.join(',')])
 
